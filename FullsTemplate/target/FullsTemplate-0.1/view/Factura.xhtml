@@ -1,0 +1,121 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <ui:define name="content">
+        <p:tabView>            
+            <p:tab title="Lista de Factura">
+                <h:form >
+                    <p:commandButton value="Editar" 
+                                     oncomplete="PF('wdlgEditFac').show();" icon="ui-icon-pencil" ajax="true" update="@all"/>
+                    <p:commandButton value="Eliminar"  >
+                        <p:confirm header="Confirmación" message="¿Deseas Eliminar? " icon="ui-icon-alert" />
+                        <p:tooltip trackMouse="true"/>
+                    </p:commandButton>
+                    <p:commandButton value="Nuevo" oncomplete="PF('dialogS').show();"/>
+                </h:form>
+                <h:panelGrid columns="1" cellpadding="10">
+                    <h:form id="ListFac" style="text-align-last: center;margin-top: 20px;">
+                        <p:dataTable id="dtTabla"                                     
+                                     widgetVar="wvDtTblFac"
+                                     selectionMode="single" 
+                                     rows="10" emptyMessage="No se encontrarón datos." 
+                                     scrollable="false" scrollHeight="500"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="5,10,15"
+                                     reflow="true"
+                                     rowHover="true"> 
+                            <p:column headerText="Cliente">
+                               
+                            </p:column>
+                            <p:column headerText="Descripcion">
+                                <h:outputText />
+                            </p:column>
+                            <p:column headerText="Descripcion">
+                                <h:outputText />
+                            </p:column>
+                            <p:column headerText="Total de factura">
+                                <h:outputText />
+                            </p:column>
+                            <p:column headerText="Total a Pagar">
+                                <h:outputText />
+                            </p:column>
+                        </p:dataTable> 
+                        <p:contextMenu for="dtTabla">
+                            <p:menuitem value="Modificar" icon="ui-icon-pencil"
+                                        oncomplete="PF('wdlgEditFac').show();" />
+                            <p:menuitem value="Eliminar" update="dtTabla " icon="ui-icon-circle-close" 
+                                        >
+                                <p:confirm header="Confirmación" message="¿Deseas Eliminar? " icon="ui-icon-alert" />
+                                <p:tooltip trackMouse="true"/>
+                            </p:menuitem>
+                        </p:contextMenu>
+                    </h:form>
+                </h:panelGrid>
+
+                <!-- Agregar-->
+                <p:dialog widgetVar="wdlgRegFac"  header="Registro" resizable="true"  responsive="true">
+                    <h:form id="tab1">
+                        <h:panelGrid columns="4" cellpadding="20">
+                            <h:panelGrid columns="4" cellpadding="20">
+                                <p:outputLabel for="fec" value="FECHFAC"/>
+                                <p:calendar id="fec"  mask="true" pattern="dd/MM/yyyy" showOn="button">
+                                </p:calendar>
+                                <p:outputLabel for="codp" value="Cliente"/>
+                                <p:inputText id="codp"  maxlength="20" style="text-transform: capitalize" required="true" requiredMessage="Ingrese el apellido">
+                                </p:inputText>
+                                <p:outputLabel for="tot" value="Total"/>
+                                <p:inputText id="tot"  maxlength="20" style="text-transform: capitalize" required="true" requiredMessage="Ingrese el apellido">
+                                </p:inputText>
+                                <p:outputLabel for="igv" value="Total"/>                                                                     
+                                <h:outputText id="igv"  />
+                                <p:outputLabel for="totpa" value="Total a Pagar"/>
+                                <p:inputText id="totpa"  maxlength="20" style="text-transform: capitalize" required="true" requiredMessage="Ingrese el apellido">
+                                    <p:keyFilter regEx="/[0-9]/"/>
+                                </p:inputText>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                        <p:commandButton value="Guardar" update="tab1"
+                                         oncomplete="if(args &amp;&amp; !args.validationFailed)PF('wdlgRegProd').hide()"/>
+                        <p:commandButton value="Detalle" oncomplete="PF('wdlgRegDet').show();"/> 
+                    </h:form>
+                </p:dialog> 
+
+                <!--MODIFICAR-->
+                <p:dialog id="dlgEditFac" widgetVar="wdlgEditFac"  header="Actualizacion de los datos">
+                    <h:form id="formEditProd">
+                        <p:panelGrid columns="4" id="pgEditFac">
+                            <p:outputLabel for="fec" value="FECHFAC"/>
+                            <p:calendar id="fec"  mask="true" pattern="dd/MM/yyyy" showOn="button">
+                            </p:calendar>
+                            <p:outputLabel for="codp" value="Cliente"/>
+                            <p:inputText id="codp"  maxlength="20" style="text-transform: capitalize" required="true" requiredMessage="Ingrese el apellido">
+                            </p:inputText>
+                            <p:outputLabel for="tot" value="Total"/>
+                            <p:inputText id="tot"  maxlength="20" style="text-transform: capitalize" required="true" requiredMessage="Ingrese el apellido">
+                            </p:inputText>
+                            <p:outputLabel for="igv" value="Total"/>                                                                     
+                            <h:outputText id="igv"  />
+                            <p:outputLabel for="totpa" value="Total a Pagar"/>
+                            <p:inputText id="totpa"  maxlength="20" style="text-transform: capitalize" required="true" requiredMessage="Ingrese el apellido">
+                                <p:keyFilter regEx="/[0-9]/"/>
+                            </p:inputText>
+                        </p:panelGrid>
+                        <p:commandButton value="Actualizar" 
+                                         oncomplete="if(!args.validationFailed)PF('wdlgEditFac').hide();PF('wvDtTblFac').filter();"
+                                         ajax="true" update="@all"  >
+                        </p:commandButton>
+                        <p:commandButton value="Cancelar" icon="ui-icon-close" immediate="true" oncomplete="PF('wdlgEditFac').hide();" 
+                                         ajax="true" update="@all" process="@this">
+                            <p:resetInput target="pgEditFac" />
+                        </p:commandButton>
+                    </h:form>
+                </p:dialog>
+
+            </p:tab>
+        </p:tabView>
+    </ui:define>
+</ui:composition>
